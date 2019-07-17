@@ -1,9 +1,11 @@
 package mobStor
 
+// Router
 type router struct {
-	//TODO: Add array of providers
+	// TODO: Add array of providers
 }
 
+// Routes file data to the configured object stores
 func (r router) RouteObject(
 	data []byte,
 	fileName string,
