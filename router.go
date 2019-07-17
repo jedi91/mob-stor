@@ -1,23 +1,44 @@
 package mobStor
 
-// Router
-type router struct {
-	// TODO: Add array of providers
+// Router for Object Stores
+type Router struct {
+	providers []provider
 }
 
 // Routes file data to the configured object stores
-func (r router) RouteObject(
+func (r Router) Route(
 	data []byte,
 	fileName string,
-) bool {
-	if r.invalidInputs(data, fileName) {
-		return false
+) []routeResult {
+	if r.invalidInputs(
+		data,
+		fileName,
+	) {
+		return []routeResult{}
 	}
 
-	return true
+	results := []routeResult{}
+	for _, provider := range r.providers {
+		success := provider.stor(
+			data,
+			fileName,
+		)
+
+		result := routeResult{
+			provider.name(),
+			success,
+		}
+
+		results = append(
+			results,
+			result,
+		)
+	}
+
+	return results
 }
 
-func (r router) invalidInputs(
+func (r Router) invalidInputs(
 	data []byte,
 	fileName string,
 ) bool {

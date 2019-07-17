@@ -6,65 +6,82 @@ import (
 
 const errorTemplate = "Actual: %t | Expected: %t"
 
-func TestRouteObject(t *testing.T) {
-	r := router{}
+type testProvider struct {
+}
+
+func (p testProvider) stor(
+	data []byte,
+	fileName string,
+) bool {
+	return true
+}
+
+func (p testProvider) name() string {
+	return "test"
+}
+
+func TestRoute(t *testing.T) {
+	p := testProvider{}
+	r := Router{[]provider{p}}
 	data := []byte("test file")
 	fileName := "TestFile"
-	result := r.RouteObject(data, fileName)
-	if result {
+	results := r.Route(data, fileName)
+	success := true
+	for _, result := range results {
+		success = success && result.success
+	}
+
+	if success {
 		return
 	}
 
 	t.Errorf(
 		errorTemplate,
-		result,
+		success,
 		true,
 	)
 }
 
-func TestInvalidInputsNilData(t *testing.T) {
-	r := router{}
+func TestRouteNilData(t *testing.T) {
+	p := testProvider{}
+	r := Router{[]provider{p}}
 	fileName := "TestFile"
-	result := r.invalidInputs(nil, fileName)
+	result := r.Route(nil, fileName)
 	if result {
-		return
+		t.Errorf(
+			errorTemplate,
+			result,
+			false,
+		)
 	}
-
-	t.Errorf(
-		errorTemplate,
-		result,
-		true,
-	)
 }
 
-func TestInvalidInputsEmptyData(t *testing.T) {
-	r := router{}
+func TestRouteEmptyData(t *testing.T) {
+	p := testProvider{}
+	r := Router{[]provider{p}}
 	fileName := "TestFile"
 	data := []byte("")
-	result := r.invalidInputs(data, fileName)
+	result := r.Route(data, fileName)
 	if result {
-		return
+		t.Errorf(
+			errorTemplate,
+			result,
+			true,
+		)
 	}
-
-	t.Errorf(
-		errorTemplate,
-		result,
-		true,
-	)
 }
 
-func TestInvalidInputsEmptyFileName(t *testing.T) {
-	r := router{}
+func TestRouteEmptyFileName(t *testing.T) {
+	p := testProvider{}
+	r := Router{[]provider{p}}
 	fileName := ""
 	data := []byte("Some Test Data")
-	result := r.invalidInputs(data, fileName)
+	result := r.Route(data, fileName)
 	if result {
-		return
+		t.Errorf(
+			errorTemplate,
+			result,
+			true,
+		)
 	}
-
-	t.Errorf(
-		errorTemplate,
-		result,
-		true,
-	)
 }
