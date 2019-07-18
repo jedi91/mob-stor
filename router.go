@@ -25,7 +25,7 @@ func (r Router) Route(
 		)
 
 		result := routeResult{
-			provider.name(),
+			provider.getName(),
 			success,
 		}
 

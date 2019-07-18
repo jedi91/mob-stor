@@ -6,5 +6,5 @@ type provider interface {
 		fileName string,
 	) bool
 
-	name() string
+	getName() string
 }
