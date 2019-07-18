@@ -1,6 +1,7 @@
-package mobStor
+package router
 
 import (
+	"github.com/jedi91/mob-stor/providers"
 	"testing"
 )
 
@@ -13,14 +14,14 @@ type testProvider struct {
 	name   string
 }
 
-func (p testProvider) stor(
+func (p testProvider) Stor(
 	data []byte,
 	fileName string,
 ) bool {
 	return p.result
 }
 
-func (p testProvider) getName() string {
+func (p testProvider) GetName() string {
 	return p.name
 }
 
@@ -147,7 +148,7 @@ func setupRouter(
 	}
 
 	return Router{
-		[]provider{
+		Providers: []providers.Provider{
 			p1,
 			p2,
 		},
@@ -155,11 +156,11 @@ func setupRouter(
 }
 
 func checkForSuccess(
-	results []routeResult,
+	results []RouteResult,
 ) bool {
 	success := true
 	for _, result := range results {
-		success = success && result.success
+		success = success && result.Success
 	}
 
 	return success

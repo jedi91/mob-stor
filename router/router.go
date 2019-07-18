@@ -1,31 +1,35 @@
-package mobStor
+package router
+
+import (
+	"github.com/jedi91/mob-stor/providers"
+)
 
 // Router for Object Stores
 type Router struct {
-	providers []provider
+	Providers []providers.Provider
 }
 
 // Routes file data to the configured object stores
 func (r Router) Route(
 	data []byte,
 	fileName string,
-) []routeResult {
+) []RouteResult {
 	if r.inputsInvalid(
 		data,
 		fileName,
 	) {
-		return []routeResult{}
+		return []RouteResult{}
 	}
 
-	results := []routeResult{}
-	for _, provider := range r.providers {
-		success := provider.stor(
+	results := []RouteResult{}
+	for _, provider := range r.Providers {
+		success := provider.Stor(
 			data,
 			fileName,
 		)
 
-		result := routeResult{
-			provider.getName(),
+		result := RouteResult{
+			provider.GetName(),
 			success,
 		}
 
