@@ -10,7 +10,7 @@ func (r Router) Route(
 	data []byte,
 	fileName string,
 ) []routeResult {
-	if r.invalidInputs(
+	if r.inputsInvalid(
 		data,
 		fileName,
 	) {
@@ -38,7 +38,7 @@ func (r Router) Route(
 	return results
 }
 
-func (r Router) invalidInputs(
+func (r Router) inputsInvalid(
 	data []byte,
 	fileName string,
 ) bool {
