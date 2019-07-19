@@ -156,7 +156,7 @@ func setupDistributor(
 }
 
 func checkForSuccess(
-	results []DistributeResult,
+	results []Result,
 ) bool {
 	success := true
 	for _, result := range results {

@@ -13,22 +13,22 @@ type Distributor struct {
 func (d Distributor) Distribute(
 	data []byte,
 	fileName string,
-) []DistributeResult {
+) []Result {
 	if d.inputsInvalid(
 		data,
 		fileName,
 	) {
-		return []DistributeResult{}
+		return []Result{}
 	}
 
-	results := []DistributeResult{}
+	results := []Result{}
 	for _, transmitter := range d.Transmitters {
 		success := transmitter.Stor(
 			data,
 			fileName,
 		)
 
-		result := DistributeResult{
+		result := Result{
 			transmitter.GetName(),
 			success,
 		}

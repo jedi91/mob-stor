@@ -1,6 +1,6 @@
 package distribute
 
-type DistributeResult struct {
+type Result struct {
 	Stor    string
 	Success bool
 }
