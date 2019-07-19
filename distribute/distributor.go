@@ -4,12 +4,12 @@ import (
 	"github.com/jedi91/mob-stor/transmit"
 )
 
-// Router for Object Stores
+// Distributor for Object Stores
 type Distributor struct {
 	Transmitters []transmit.Transmitter
 }
 
-// Routes file data to the configured object stores
+// Distribute file data to object stores
 func (d Distributor) Distribute(
 	data []byte,
 	fileName string,
