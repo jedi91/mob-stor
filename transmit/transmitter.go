@@ -1,6 +1,6 @@
-package providers
+package transmit
 
-type Provider interface {
+type Transmitter interface {
 	Stor(
 		data []byte,
 		fileName string,

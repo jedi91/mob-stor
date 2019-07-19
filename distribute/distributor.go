@@ -1,35 +1,35 @@
-package router
+package distribute
 
 import (
-	"github.com/jedi91/mob-stor/providers"
+	"github.com/jedi91/mob-stor/transmit"
 )
 
 // Router for Object Stores
-type Router struct {
-	Providers []providers.Provider
+type Distributor struct {
+	Transmitters []transmit.Transmitter
 }
 
 // Routes file data to the configured object stores
-func (r Router) Route(
+func (d Distributor) Distribute(
 	data []byte,
 	fileName string,
-) []RouteResult {
-	if r.inputsInvalid(
+) []DistributeResult {
+	if d.inputsInvalid(
 		data,
 		fileName,
 	) {
-		return []RouteResult{}
+		return []DistributeResult{}
 	}
 
-	results := []RouteResult{}
-	for _, provider := range r.Providers {
-		success := provider.Stor(
+	results := []DistributeResult{}
+	for _, transmitter := range d.Transmitters {
+		success := transmitter.Stor(
 			data,
 			fileName,
 		)
 
-		result := RouteResult{
-			provider.GetName(),
+		result := DistributeResult{
+			transmitter.GetName(),
 			success,
 		}
 
@@ -42,7 +42,7 @@ func (r Router) Route(
 	return results
 }
 
-func (r Router) inputsInvalid(
+func (d Distributor) inputsInvalid(
 	data []byte,
 	fileName string,
 ) bool {

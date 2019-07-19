@@ -1,7 +1,7 @@
-package router
+package distribute
 
 import (
-	"github.com/jedi91/mob-stor/providers"
+	"github.com/jedi91/mob-stor/transmit"
 	"testing"
 )
 
@@ -9,24 +9,24 @@ import (
 const boolTemplate = "Actual: %t | Expected: %t"
 const intTemplate = "Actual: %d | Expected: %d"
 
-type testProvider struct {
+type testTransmitter struct {
 	result bool
 	name   string
 }
 
-func (p testProvider) Stor(
+func (t testTransmitter) Stor(
 	data []byte,
 	fileName string,
 ) bool {
-	return p.result
+	return t.result
 }
 
-func (p testProvider) GetName() string {
-	return p.name
+func (t testTransmitter) GetName() string {
+	return t.name
 }
 
-func TestRouteSuccess(t *testing.T) {
-	r := setupRouter(
+func TestDistributeSuccess(t *testing.T) {
+	d := setupDistributor(
 		true,
 		true,
 	)
@@ -34,7 +34,7 @@ func TestRouteSuccess(t *testing.T) {
 	data := []byte("test file")
 	fileName := "TestFile"
 
-	results := r.Route(
+	results := d.Distribute(
 		data,
 		fileName,
 	)
@@ -50,14 +50,14 @@ func TestRouteSuccess(t *testing.T) {
 	)
 }
 
-func TestRouteNilData(t *testing.T) {
-	r := setupRouter(
+func TestDistributeNilData(t *testing.T) {
+	d := setupDistributor(
 		true,
 		true,
 	)
 
 	fileName := "TestFile"
-	results := r.Route(
+	results := d.Distribute(
 		nil,
 		fileName,
 	)
@@ -69,15 +69,15 @@ func TestRouteNilData(t *testing.T) {
 	)
 }
 
-func TestRouteEmptyData(t *testing.T) {
-	r := setupRouter(
+func TestDistributeEmptyData(t *testing.T) {
+	d := setupDistributor(
 		true,
 		true,
 	)
 
 	data := []byte("")
 	fileName := "TestFile"
-	results := r.Route(
+	results := d.Distribute(
 		data,
 		fileName,
 	)
@@ -89,15 +89,15 @@ func TestRouteEmptyData(t *testing.T) {
 	)
 }
 
-func TestRouteEmptyFileName(t *testing.T) {
-	r := setupRouter(
+func TestDistributeEmptyFileName(t *testing.T) {
+	d := setupDistributor(
 		true,
 		true,
 	)
 
 	fileName := ""
 	data := []byte("Some Test Data")
-	results := r.Route(
+	results := d.Distribute(
 		data,
 		fileName,
 	)
@@ -109,15 +109,15 @@ func TestRouteEmptyFileName(t *testing.T) {
 	)
 }
 
-func TestRouteSingleStorFails(t *testing.T) {
-	r := setupRouter(
+func TestDistributeSingleStorFails(t *testing.T) {
+	d := setupDistributor(
 		true,
 		false,
 	)
 
 	fileName := "TestFile"
 	data := []byte("Some Test Data")
-	results := r.Route(
+	results := d.Distribute(
 		data,
 		fileName,
 	)
@@ -133,30 +133,30 @@ func TestRouteSingleStorFails(t *testing.T) {
 	)
 }
 
-func setupRouter(
+func setupDistributor(
 	r1 bool,
 	r2 bool,
-) Router {
-	p1 := testProvider{
+) Distributor {
+	t1 := testTransmitter{
 		name:   "Test 1",
 		result: r1,
 	}
 
-	p2 := testProvider{
+	t2 := testTransmitter{
 		name:   "Test 2",
 		result: r2,
 	}
 
-	return Router{
-		Providers: []providers.Provider{
-			p1,
-			p2,
+	return Distributor{
+		Transmitters: []transmit.Transmitter{
+			t1,
+			t2,
 		},
 	}
 }
 
 func checkForSuccess(
-	results []RouteResult,
+	results []DistributeResult,
 ) bool {
 	success := true
 	for _, result := range results {
