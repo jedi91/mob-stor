@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"github.com/Azure/azure-pipeline-go/pipeline"
 	"github.com/Azure/azure-storage-blob-go/azblob"
+	"net/url"
 )
+
+const urlTemplate = "https://%s.blob.core.windows.net/%s"
 
 type ContainerUrlProvider struct {
 	credsProvider BlobCredentialProvider
@@ -16,23 +19,22 @@ func (c ContainerUrlProvider) CreateContainerUrl(
 	azblob.ContainerURL,
 	error,
 ) {
-	pipeline, err := c.createPipeline()
-	if err != nil {
-		return azblob.ContainerURL{}, err
+	pipeline, pipelineErr := c.createPipeline()
+	if pipelineErr != nil {
+		return azblob.ContainerURL{}, pipelineErr
 	}
 
-	URL, _ := url.Parse(
-		fmt.Sprintf(
-			"https://%s.blob.core.windows.net/%s",
-			c.credsProvider.accountName,
-			containerName,
-		),
-	)
+	URL, urlErr := c.createUrl(containerName)
+	if urlErr != nil {
+		return azblob.ContainerURL{}, urlErr
+	}
 
-	containerUrl = azblob.NewContainerURL(
+	containerUrl := azblob.NewContainerURL(
 		*URL,
 		pipeline,
 	)
+
+	return containerUrl, nil
 }
 
 func (c ContainerUrlProvider) createPipeline() (
@@ -50,4 +52,19 @@ func (c ContainerUrlProvider) createPipeline() (
 	)
 
 	return pipeline, nil
+}
+
+func (c ContainerUrlProvider) createUrl(
+	containerName string,
+) (
+	*url.URL,
+	error,
+) {
+	return url.Parse(
+		fmt.Sprintf(
+			urlTemplate,
+			c.credsProvider.accountName,
+			containerName,
+		),
+	)
 }

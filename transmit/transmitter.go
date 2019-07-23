@@ -1,10 +1,11 @@
 package transmit
 
 type Transmitter interface {
-	Stor(
+	Transmit(
 		data []byte,
 		fileName string,
-	) bool
+		path string,
+	) error
 
 	GetName() string
 }
