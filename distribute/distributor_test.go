@@ -1,6 +1,7 @@
 package distribute
 
 import (
+	"errors"
 	"github.com/jedi91/mob-stor/transmit"
 	"testing"
 )
@@ -10,15 +11,16 @@ const boolTemplate = "Actual: %t | Expected: %t"
 const intTemplate = "Actual: %d | Expected: %d"
 
 type testTransmitter struct {
-	result bool
-	name   string
+	err  error
+	name string
 }
 
-func (t testTransmitter) Stor(
+func (t testTransmitter) Transmit(
 	data []byte,
 	fileName string,
-) bool {
-	return t.result
+	path string,
+) error {
+	return t.err
 }
 
 func (t testTransmitter) GetName() string {
@@ -27,16 +29,18 @@ func (t testTransmitter) GetName() string {
 
 func TestDistributeSuccess(t *testing.T) {
 	d := setupDistributor(
-		true,
-		true,
+		nil,
+		nil,
 	)
 
 	data := []byte("test file")
 	fileName := "TestFile"
+	path := "test/test"
 
 	results := d.Distribute(
 		data,
 		fileName,
+		path,
 	)
 
 	success := checkForSuccess(
@@ -52,14 +56,16 @@ func TestDistributeSuccess(t *testing.T) {
 
 func TestDistributeNilData(t *testing.T) {
 	d := setupDistributor(
-		true,
-		true,
+		nil,
+		nil,
 	)
 
 	fileName := "TestFile"
+	path := "test/test"
 	results := d.Distribute(
 		nil,
 		fileName,
+		path,
 	)
 
 	checkExpectedInt(
@@ -71,15 +77,17 @@ func TestDistributeNilData(t *testing.T) {
 
 func TestDistributeEmptyData(t *testing.T) {
 	d := setupDistributor(
-		true,
-		true,
+		nil,
+		nil,
 	)
 
 	data := []byte("")
 	fileName := "TestFile"
+	path := "test/test"
 	results := d.Distribute(
 		data,
 		fileName,
+		path,
 	)
 
 	checkExpectedInt(
@@ -91,15 +99,17 @@ func TestDistributeEmptyData(t *testing.T) {
 
 func TestDistributeEmptyFileName(t *testing.T) {
 	d := setupDistributor(
-		true,
-		true,
+		nil,
+		nil,
 	)
 
 	fileName := ""
 	data := []byte("Some Test Data")
+	path := "test/test"
 	results := d.Distribute(
 		data,
 		fileName,
+		path,
 	)
 
 	checkExpectedInt(
@@ -111,15 +121,17 @@ func TestDistributeEmptyFileName(t *testing.T) {
 
 func TestDistributeSingleStorFails(t *testing.T) {
 	d := setupDistributor(
-		true,
-		false,
+		nil,
+		errors.New("test"),
 	)
 
 	fileName := "TestFile"
 	data := []byte("Some Test Data")
+	path := "test/test"
 	results := d.Distribute(
 		data,
 		fileName,
+		path,
 	)
 
 	success := checkForSuccess(
@@ -134,17 +146,17 @@ func TestDistributeSingleStorFails(t *testing.T) {
 }
 
 func setupDistributor(
-	r1 bool,
-	r2 bool,
+	err1 error,
+	err2 error,
 ) Distributor {
 	t1 := testTransmitter{
-		name:   "Test 1",
-		result: r1,
+		name: "Test 1",
+		err:  err1,
 	}
 
 	t2 := testTransmitter{
-		name:   "Test 2",
-		result: r2,
+		name: "Test 2",
+		err:  err2,
 	}
 
 	return Distributor{

@@ -63,7 +63,7 @@ func (c ContainerUrlProvider) createUrl(
 	return url.Parse(
 		fmt.Sprintf(
 			urlTemplate,
-			c.credsProvider.accountName,
+			c.credsProvider.AccountName,
 			containerName,
 		),
 	)

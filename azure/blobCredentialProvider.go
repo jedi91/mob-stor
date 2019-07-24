@@ -5,8 +5,8 @@ import (
 )
 
 type BlobCredentialProvider struct {
-	accountName string
-	accountKey  string
+	AccountName string
+	AccountKey  string
 }
 
 func (b BlobCredentialProvider) CreateCredential() (
@@ -14,7 +14,7 @@ func (b BlobCredentialProvider) CreateCredential() (
 	error,
 ) {
 	return azblob.NewSharedKeyCredential(
-		b.accountName,
-		b.accountKey,
+		b.AccountName,
+		b.AccountKey,
 	)
 }
