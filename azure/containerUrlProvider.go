@@ -10,7 +10,7 @@ import (
 const urlTemplate = "https://%s.blob.core.windows.net/%s"
 
 type ContainerUrlProvider struct {
-	credsProvider BlobCredentialProvider
+	CredsProvider BlobCredentialProvider
 }
 
 func (c ContainerUrlProvider) CreateContainerUrl(
@@ -41,7 +41,7 @@ func (c ContainerUrlProvider) createPipeline() (
 	pipeline.Pipeline,
 	error,
 ) {
-	creds, err := c.credsProvider.CreateCredential()
+	creds, err := c.CredsProvider.CreateCredential()
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c ContainerUrlProvider) createUrl(
 	return url.Parse(
 		fmt.Sprintf(
 			urlTemplate,
-			c.credsProvider.AccountName,
+			c.CredsProvider.AccountName,
 			containerName,
 		),
 	)

@@ -7,7 +7,11 @@ import (
 )
 
 type AzureBlobTransmitter struct {
-	containerUrlProvider azure.ContainerUrlProvider
+	ContainerUrlProvider azure.ContainerUrlProvider
+}
+
+func (t AzureBlobTransmitter) GetName() string {
+	return "AzureBlob"
 }
 
 func (t AzureBlobTransmitter) Transmit(
@@ -48,7 +52,7 @@ func (t AzureBlobTransmitter) createBlobUrl(
 	error,
 ) {
 	containerUrl, err := t.
-		containerUrlProvider.
+		ContainerUrlProvider.
 		CreateContainerUrl(path)
 
 	if err != nil {

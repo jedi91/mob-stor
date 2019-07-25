@@ -4,8 +4,13 @@ import (
 	"github.com/jedi91/mob-stor/azure"
 	"github.com/jedi91/mob-stor/distribute"
 	"github.com/jedi91/mob-stor/transmit"
+	"os"
 	"testing"
+	"time"
 )
+
+const boolTemplate = "Actual: %t | Expected: %t"
+const dateFormat = "01-02-2006 15:04:05"
 
 func TestAzureFileUpload(t *testing.T) {
 	transmitter := setupTransmitter()
@@ -17,27 +22,39 @@ func TestAzureFileUpload(t *testing.T) {
 		"Testing uploading a file to azureblob with mob-stor.",
 	)
 
-	fileName := "TestAzureFileUpload"
-	path := "mob-stor/integration-tests"
+	fileName := "TestAzureFileUpload_" +
+		time.Now().Format(dateFormat)
+
+	path := "integrationtests"
 	results := distributor.Distribute(
 		data,
 		fileName,
 		path,
 	)
+
+	success := checkForSuccess(
+		results,
+	)
+
+	checkExpectedBool(
+		t,
+		success,
+		true,
+	)
 }
 
 func setupTransmitter() transmit.Transmitter {
 	credsProvider := azure.BlobCredentialProvider{
-		"testAccountName",
-		"testAccountKey",
+		AccountName: os.Getenv("AZURE_STORAGE_ACCOUNT"),
+		AccountKey:  os.Getenv("AZURE_STORAGE_ACCESS_KEY"),
 	}
 
 	urlProvider := azure.ContainerUrlProvider{
-		credsProvider,
+		CredsProvider: credsProvider,
 	}
 
 	return transmit.AzureBlobTransmitter{
-		urlProvider,
+		ContainerUrlProvider: urlProvider,
 	}
 }
 
@@ -49,6 +66,33 @@ func setupDistributor(
 	}
 
 	return distribute.Distributor{
-		transmitters,
+		Transmitters: transmitters,
 	}
+}
+
+func checkForSuccess(
+	results []distribute.Result,
+) bool {
+	success := true
+	for _, result := range results {
+		success = success && result.Success
+	}
+
+	return success
+}
+
+func checkExpectedBool(
+	t *testing.T,
+	actual bool,
+	expected bool,
+) {
+	if actual == expected {
+		return
+	}
+
+	t.Errorf(
+		boolTemplate,
+		actual,
+		expected,
+	)
 }
