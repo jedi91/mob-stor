@@ -12,12 +12,12 @@ type Distributor struct {
 // Distribute file data to object stores
 func (d Distributor) Distribute(
 	data []byte,
-	fileName string,
-	path string,
+	filePath string,
+	containerName string,
 ) []Result {
 	if d.inputsInvalid(
 		data,
-		fileName,
+		filePath,
 	) {
 		return []Result{}
 	}
@@ -26,8 +26,8 @@ func (d Distributor) Distribute(
 	for _, transmitter := range d.Transmitters {
 		err := transmitter.Transmit(
 			data,
-			fileName,
-			path,
+			filePath,
+			containerName,
 		)
 
 		result := Result{
@@ -47,12 +47,9 @@ func (d Distributor) Distribute(
 
 func (d Distributor) inputsInvalid(
 	data []byte,
-	fileName string,
+	filePath string,
 ) bool {
-	dataIsNil := data == nil
-	dataIsEmpty := len(data) == 0
-	fileNameIsEmpty := len(fileName) == 0
-	return dataIsNil ||
-		dataIsEmpty ||
-		fileNameIsEmpty
+	return data == nil ||
+		len(data) == 0 ||
+		len(filePath) == 0
 }

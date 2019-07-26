@@ -16,12 +16,12 @@ func (t AzureBlobTransmitter) GetName() string {
 
 func (t AzureBlobTransmitter) Transmit(
 	data []byte,
-	fileName string,
-	path string,
+	filePath string,
+	containerName string,
 ) error {
 	blobUrl, blobUrlErr := t.createBlobUrl(
-		path,
-		fileName,
+		containerName,
+		filePath,
 	)
 
 	if blobUrlErr != nil {
@@ -45,22 +45,22 @@ func (t AzureBlobTransmitter) Transmit(
 }
 
 func (t AzureBlobTransmitter) createBlobUrl(
-	path string,
-	fileName string,
+	containerName string,
+	filePath string,
 ) (
 	azblob.BlockBlobURL,
 	error,
 ) {
 	containerUrl, err := t.
 		ContainerUrlProvider.
-		CreateContainerUrl(path)
+		CreateContainerUrl(containerName)
 
 	if err != nil {
 		return azblob.BlockBlobURL{}, err
 	}
 
 	blobUrl := containerUrl.NewBlockBlobURL(
-		fileName,
+		filePath,
 	)
 
 	return blobUrl, nil

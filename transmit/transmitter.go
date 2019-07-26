@@ -3,8 +3,8 @@ package transmit
 type Transmitter interface {
 	Transmit(
 		data []byte,
-		fileName string,
-		path string,
+		filePath string,
+		containerName string,
 	) error
 
 	GetName() string

@@ -17,8 +17,8 @@ type testTransmitter struct {
 
 func (t testTransmitter) Transmit(
 	data []byte,
-	fileName string,
-	path string,
+	filePath string,
+	containerName string,
 ) error {
 	return t.err
 }
@@ -34,13 +34,13 @@ func TestDistributeSuccess(t *testing.T) {
 	)
 
 	data := []byte("test file")
-	fileName := "TestFile"
-	path := "test/test"
+	filePath := "TestFile"
+	containerName := "test/test"
 
 	results := d.Distribute(
 		data,
-		fileName,
-		path,
+		filePath,
+		containerName,
 	)
 
 	success := checkForSuccess(
@@ -60,12 +60,12 @@ func TestDistributeNilData(t *testing.T) {
 		nil,
 	)
 
-	fileName := "TestFile"
-	path := "test/test"
+	filePath := "test/TestFile"
+	containerName := "test"
 	results := d.Distribute(
 		nil,
-		fileName,
-		path,
+		filePath,
+		containerName,
 	)
 
 	checkExpectedInt(
@@ -82,12 +82,12 @@ func TestDistributeEmptyData(t *testing.T) {
 	)
 
 	data := []byte("")
-	fileName := "TestFile"
-	path := "test/test"
+	filePath := "test/TestFile"
+	containerName := "test"
 	results := d.Distribute(
 		data,
-		fileName,
-		path,
+		filePath,
+		containerName,
 	)
 
 	checkExpectedInt(
@@ -97,19 +97,19 @@ func TestDistributeEmptyData(t *testing.T) {
 	)
 }
 
-func TestDistributeEmptyFileName(t *testing.T) {
+func TestDistributeEmptyFilePath(t *testing.T) {
 	d := setupDistributor(
 		nil,
 		nil,
 	)
 
-	fileName := ""
+	filePath := ""
 	data := []byte("Some Test Data")
-	path := "test/test"
+	containerName := "test"
 	results := d.Distribute(
 		data,
-		fileName,
-		path,
+		filePath,
+		containerName,
 	)
 
 	checkExpectedInt(
@@ -125,13 +125,13 @@ func TestDistributeSingleStorFails(t *testing.T) {
 		errors.New("test"),
 	)
 
-	fileName := "TestFile"
+	filePath := "TestFile"
 	data := []byte("Some Test Data")
-	path := "test/test"
+	containerName := "test/test"
 	results := d.Distribute(
 		data,
-		fileName,
-		path,
+		filePath,
+		containerName,
 	)
 
 	success := checkForSuccess(

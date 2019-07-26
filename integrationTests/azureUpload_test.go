@@ -22,14 +22,45 @@ func TestAzureFileUpload(t *testing.T) {
 		"Testing uploading a file to azureblob with mob-stor.",
 	)
 
-	fileName := "TestAzureFileUpload_" +
+	filePath := "TestAzureFileUpload_" +
 		time.Now().Format(dateFormat)
 
-	path := "integrationtests"
+	containerName := "integrationtests"
 	results := distributor.Distribute(
 		data,
-		fileName,
-		path,
+		filePath,
+		containerName,
+	)
+
+	success := checkForSuccess(
+		results,
+	)
+
+	checkExpectedBool(
+		t,
+		success,
+		true,
+	)
+}
+
+func TestAzureFileUploadWithPath(t *testing.T) {
+	transmitter := setupTransmitter()
+	distributor := setupDistributor(
+		transmitter,
+	)
+
+	data := []byte(
+		"Testing uploading a file to azureblob with mob-stor.",
+	)
+
+	filePath := "TestFolder/TestAzureFileUpload_" +
+		time.Now().Format(dateFormat)
+
+	containerName := "integrationtests"
+	results := distributor.Distribute(
+		data,
+		filePath,
+		containerName,
 	)
 
 	success := checkForSuccess(
