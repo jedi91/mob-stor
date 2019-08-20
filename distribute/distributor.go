@@ -24,6 +24,7 @@ func (d Distributor) Distribute(
 
 	results := []Result{}
 	for _, transmitter := range d.Transmitters {
+		//TODO: Move into a go routine and use a channel to gather the results
 		err := transmitter.Transmit(
 			data,
 			filePath,
