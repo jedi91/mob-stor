@@ -4,7 +4,7 @@ Multi-Cloud Object Storage
 
 ## Description
 
-Upload to multiple object stores through a single REST Api.
+Upload to multiple object stores through a single Api.
 
 ## Supported Object Stores
 
