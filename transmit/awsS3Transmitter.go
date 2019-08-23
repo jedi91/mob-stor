@@ -12,10 +12,11 @@ type AWSS3Transmitter struct {
 	Id     string
 	Secret string
 	Token  string
+	Region string
 }
 
 func (t AWSS3Transmitter) GetName() string {
-	return "AWSS3"
+	return "AWSS3" //TODO: look for a way to get the name of a type
 }
 
 func (t AWSS3Transmitter) Transmit(
@@ -24,7 +25,7 @@ func (t AWSS3Transmitter) Transmit(
 	containerName string,
 ) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2"), //TODO: Do we have to specify this?
+		Region: aws.String(t.Region),
 		Credentials: credentials.NewStaticCredentials(
 			t.Id,
 			t.Secret,
