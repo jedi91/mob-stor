@@ -1,2 +1,3 @@
 *cp.out
 .vscode/launch.json
+integrationTests/setup.sh

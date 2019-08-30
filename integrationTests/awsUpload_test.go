@@ -1,6 +1,7 @@
 package integrationTests
 
 import (
+	"fmt"
 	"github.com/jedi91/mob-stor/distribute"
 	"github.com/jedi91/mob-stor/transmit"
 	"os"
@@ -26,7 +27,7 @@ func TestAWSFileUpload(t *testing.T) {
 	filepath := "TestAWSFileUpload_" +
 		time.Now().Format(dateFormat)
 
-	containerName := "integrationtests"
+	containerName := "mob-stor-integrationtests"
 
 	results := distributor.Distribute(
 		data,
@@ -44,10 +45,19 @@ func TestAWSFileUpload(t *testing.T) {
 }
 
 func setupAwsTransmitter() transmit.Transmitter {
+	id := os.Getenv("AWS_ID")
+	fmt.Println("ID: " + id)
+
+	secret := os.Getenv("AWS_SECRET")
+	fmt.Println("Secret: " + secret)
+
+	region := os.Getenv("AWS_REGION")
+	fmt.Println("Region: " + region)
+
 	return transmit.AWSS3Transmitter{
-		Id:     os.Getenv("AWS_ID"),
-		Secret: os.Getenv("AWS_SECRET"),
-		Token:  os.Getenv("AWS_TOKEN"),
-		Region: os.Getenv("AWS_REGION"),
+		Id:     id,
+		Secret: secret,
+		Token:  "",
+		Region: region,
 	}
 }
