@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/jedi91/mob-stor)](https://goreportcard.com/report/github.com/jedi91/mob-stor)
 # MobStor
 
 Multi-Cloud Object Storage
@@ -11,5 +12,3 @@ Upload to multiple object stores through a single Api.
 * Azure Blob
 * AWS S3
 * GCP Cloud Storage
-
-[![Go Report Card](https://goreportcard.com/badge/github.com/jedi91/mob-stor)](https://goreportcard.com/report/github.com/jedi91/mob-stor)
