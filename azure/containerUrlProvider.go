@@ -12,10 +12,12 @@ import (
 
 const urlTemplate = "https://%s.blob.core.windows.net/%s"
 
+// Provides a ContainerURL from the azblob package
 type ContainerUrlProvider struct {
 	CredsProvider BlobCredentialProvider
 }
 
+// Creates a ContainerURL
 func (c ContainerUrlProvider) CreateContainerUrl(
 	containerName string,
 ) (
