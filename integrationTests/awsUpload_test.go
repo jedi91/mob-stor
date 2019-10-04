@@ -1,7 +1,7 @@
 // Copyright (c) Michael Kovacevich 2019. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package integrationTests
+package integrationtests
 
 import (
 	"fmt"
@@ -58,7 +58,7 @@ func setupAwsTransmitter() transmit.Transmitter {
 	fmt.Println("Region: " + region)
 
 	return transmit.AWSS3Transmitter{
-		Id:     id,
+		ID:     id,
 		Secret: secret,
 		Token:  "",
 		Region: region,

@@ -12,13 +12,13 @@ import (
 
 const urlTemplate = "https://%s.blob.core.windows.net/%s"
 
-// ContainerUrlProvider - Provides a ContainerURL from the azblob package
-type ContainerUrlProvider struct {
+// ContainerURLProvider - Provides a ContainerURL from the azblob package
+type ContainerURLProvider struct {
 	CredsProvider BlobCredentialProvider
 }
 
-// CreateContainerUrl - Creates a ContainerURL
-func (c ContainerUrlProvider) CreateContainerUrl(
+// CreateContainerURL - Creates a ContainerURL
+func (c ContainerURLProvider) CreateContainerURL(
 	containerName string,
 ) (
 	azblob.ContainerURL,
@@ -29,20 +29,20 @@ func (c ContainerUrlProvider) CreateContainerUrl(
 		return azblob.ContainerURL{}, pipelineErr
 	}
 
-	URL, urlErr := c.createUrl(containerName)
+	URL, urlErr := c.createURL(containerName)
 	if urlErr != nil {
 		return azblob.ContainerURL{}, urlErr
 	}
 
-	containerUrl := azblob.NewContainerURL(
+	containerURL := azblob.NewContainerURL(
 		*URL,
 		pipeline,
 	)
 
-	return containerUrl, nil
+	return containerURL, nil
 }
 
-func (c ContainerUrlProvider) createPipeline() (
+func (c ContainerURLProvider) createPipeline() (
 	pipeline.Pipeline,
 	error,
 ) {
@@ -59,7 +59,7 @@ func (c ContainerUrlProvider) createPipeline() (
 	return pipeline, nil
 }
 
-func (c ContainerUrlProvider) createUrl(
+func (c ContainerURLProvider) createURL(
 	containerName string,
 ) (
 	*url.URL,

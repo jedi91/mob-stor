@@ -11,7 +11,7 @@ import (
 
 // AzureBlobTransmitter - Transmits objects to Azure Blob storage
 type AzureBlobTransmitter struct {
-	ContainerUrlProvider azure.ContainerUrlProvider
+	ContainerURLProvider azure.ContainerURLProvider
 }
 
 // GetName - Gets the name of the transmitter
@@ -25,13 +25,13 @@ func (t AzureBlobTransmitter) Transmit(
 	filePath string,
 	containerName string,
 ) error {
-	blobUrl, blobUrlErr := t.createBlobUrl(
+	blobURL, blobURLErr := t.createBlobURL(
 		containerName,
 		filePath,
 	)
 
-	if blobUrlErr != nil {
-		return blobUrlErr
+	if blobURLErr != nil {
+		return blobURLErr
 	}
 
 	context := context.Background()
@@ -43,31 +43,31 @@ func (t AzureBlobTransmitter) Transmit(
 	_, uploadErr := azblob.UploadBufferToBlockBlob(
 		context,
 		data,
-		blobUrl,
+		blobURL,
 		options,
 	)
 
 	return uploadErr
 }
 
-func (t AzureBlobTransmitter) createBlobUrl(
+func (t AzureBlobTransmitter) createBlobURL(
 	containerName string,
 	filePath string,
 ) (
 	azblob.BlockBlobURL,
 	error,
 ) {
-	containerUrl, err := t.
-		ContainerUrlProvider.
-		CreateContainerUrl(containerName)
+	containerURL, err := t.
+		ContainerURLProvider.
+		CreateContainerURL(containerName)
 
 	if err != nil {
 		return azblob.BlockBlobURL{}, err
 	}
 
-	blobUrl := containerUrl.NewBlockBlobURL(
+	blobURL := containerURL.NewBlockBlobURL(
 		filePath,
 	)
 
-	return blobUrl, nil
+	return blobURL, nil
 }

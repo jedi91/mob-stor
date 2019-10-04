@@ -1,7 +1,7 @@
 // Copyright (c) Michael Kovacevich 2019. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package integrationTests
+package integrationtests
 
 import (
 	"github.com/jedi91/mob-stor/azure"
@@ -79,11 +79,11 @@ func setupAzureTransmitter() transmit.Transmitter {
 		AccountKey:  os.Getenv("AZURE_STORAGE_ACCESS_KEY"),
 	}
 
-	urlProvider := azure.ContainerUrlProvider{
+	urlProvider := azure.ContainerURLProvider{
 		CredsProvider: credsProvider,
 	}
 
 	return transmit.AzureBlobTransmitter{
-		ContainerUrlProvider: urlProvider,
+		ContainerURLProvider: urlProvider,
 	}
 }

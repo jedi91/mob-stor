@@ -13,7 +13,7 @@ import (
 
 // AWSS3Transmitter - Transmits objects to AWS S3
 type AWSS3Transmitter struct {
-	Id     string
+	ID     string
 	Secret string
 	Token  string
 	Region string
@@ -33,7 +33,7 @@ func (t AWSS3Transmitter) Transmit(
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(t.Region),
 		Credentials: credentials.NewStaticCredentials(
-			t.Id,
+			t.ID,
 			t.Secret,
 			t.Token,
 		),
