@@ -3,6 +3,7 @@
 
 package transmit
 
+// Transmitter - Interface for transmitters in mob-stor
 type Transmitter interface {
 	Transmit(
 		data []byte,

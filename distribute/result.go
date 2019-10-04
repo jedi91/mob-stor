@@ -3,6 +3,7 @@
 
 package distribute
 
+// Result of a transmission
 type Result struct {
 	Stor    string
 	Success bool

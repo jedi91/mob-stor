@@ -9,14 +9,17 @@ import (
 	"github.com/jedi91/mob-stor/azure"
 )
 
+// AzureBlobTransmitter - Transmits objects to Azure Blob storage
 type AzureBlobTransmitter struct {
 	ContainerUrlProvider azure.ContainerUrlProvider
 }
 
+// GetName - Gets the name of the transmitter
 func (t AzureBlobTransmitter) GetName() string {
 	return "AzureBlob"
 }
 
+// Transmit - Transmits an object to an Azure Blob container
 func (t AzureBlobTransmitter) Transmit(
 	data []byte,
 	filePath string,

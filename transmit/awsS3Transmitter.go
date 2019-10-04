@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
+// AWSS3Transmitter - Transmits objects to AWS S3
 type AWSS3Transmitter struct {
 	Id     string
 	Secret string
@@ -18,10 +19,12 @@ type AWSS3Transmitter struct {
 	Region string
 }
 
+// GetName - Gets the name of the transmitter
 func (t AWSS3Transmitter) GetName() string {
 	return "AWSS3" //TODO: look for a way to get the name of a type
 }
 
+// Transmit - Transmits an object to an AWS S3 bucket
 func (t AWSS3Transmitter) Transmit(
 	data []byte,
 	filepath string,

@@ -7,11 +7,13 @@ import (
 	"github.com/Azure/azure-storage-blob-go/azblob"
 )
 
+// BlobCredentialProvider - Provides a SharedKeyCredential from the azblob package
 type BlobCredentialProvider struct {
 	AccountName string
 	AccountKey  string
 }
 
+// CreateCredential - Creates the SharedKeyCredential
 func (b BlobCredentialProvider) CreateCredential() (
 	*azblob.SharedKeyCredential,
 	error,
