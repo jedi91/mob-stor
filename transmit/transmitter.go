@@ -3,15 +3,13 @@
 
 package transmit
 
-// Interface for transmitters
+// Transmitter - Interface for transmitters in mob-stor
 type Transmitter interface {
-	// Transmits an object to the implemented object store
 	Transmit(
 		data []byte,
 		filePath string,
 		containerName string,
 	) error
 
-	// Gets the name of the implemented object store
 	GetName() string
 }
