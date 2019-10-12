@@ -27,18 +27,12 @@ func (d Distributor) Distribute(
 
 	results := []Result{}
 	for _, transmitter := range d.Transmitters {
-		//TODO: Move into a go routine and use a channel to gather the results
-		err := transmitter.Transmit(
+		result := d.transmit(
 			data,
 			filePath,
 			containerName,
+			transmitter,
 		)
-
-		result := Result{
-			transmitter.GetName(),
-			err == nil,
-			err,
-		}
 
 		results = append(
 			results,
@@ -47,6 +41,75 @@ func (d Distributor) Distribute(
 	}
 
 	return results
+}
+
+// DistributeConcurrently distributes file data to object sotres concurrently
+func (d Distributor) DistributeConcurrently(
+	data []byte,
+	filePath string,
+	containerName string,
+) []Result {
+	if d.inputsInvalid(
+		data,
+		filePath,
+	) {
+		return []Result{}
+	}
+
+	resultsChan := make(chan Result)
+	for _, transmitter := range d.Transmitters {
+		go d.transmitConcurrently(
+			data,
+			filePath,
+			containerName,
+			transmitter,
+			resultsChan,
+		)
+	}
+
+	results := []Result{}
+	for range d.Transmitters {
+		results = append(
+			results,
+			<-resultsChan,
+		)
+	}
+
+	return results
+}
+
+func (d Distributor) transmitConcurrently(
+	data []byte,
+	filePath string,
+	containerName string,
+	transmitter transmit.Transmitter,
+	resultsChan chan Result,
+) {
+	resultsChan <- d.transmit(
+		data,
+		filePath,
+		containerName,
+		transmitter,
+	)
+}
+
+func (d Distributor) transmit(
+	data []byte,
+	filePath string,
+	containerName string,
+	transmitter transmit.Transmitter,
+) Result {
+	err := transmitter.Transmit(
+		data,
+		filePath,
+		containerName,
+	)
+
+	return Result{
+		transmitter.GetName(),
+		err == nil,
+		err,
+	}
 }
 
 func (d Distributor) inputsInvalid(
