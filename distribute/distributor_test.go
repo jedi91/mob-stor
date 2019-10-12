@@ -148,6 +148,33 @@ func TestDistributeSingleStorFails(t *testing.T) {
 	)
 }
 
+func TestDistributeConcurrentlySuccess(t *testing.T) {
+	d := setupDistributor(
+		nil,
+		nil,
+	)
+
+	data := []byte("test file")
+	filePath := "TestFile"
+	containerName := "test/test"
+
+	results := d.DistributeConcurrently(
+		data,
+		filePath,
+		containerName,
+	)
+
+	success := checkForSuccess(
+		results,
+	)
+
+	checkExpectedBool(
+		t,
+		success,
+		true,
+	)
+}
+
 func setupDistributor(
 	err1 error,
 	err2 error,
